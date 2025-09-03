@@ -36,3 +36,14 @@ EOF
 
 [build.environment]
   NODE_VERSION = "20.10.0"
+  [build]
+  base    = "frontend"
+  publish = "frontend/dist"
+  command = "npm run build"
+
+[functions]
+  directory = "frontend/netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20.10.0"
+
