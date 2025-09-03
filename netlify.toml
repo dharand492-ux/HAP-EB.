@@ -1,11 +1,15 @@
 [build]
-  base    = "frontend"
-  publish = "frontend/dist"
   command = "npm run build"
+  functions = "netlify/functions"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 [functions]
-  directory = "netlify/functions"
-
-# Optional: set Node version to avoid mismatches
-[build.environment]
-  NODE_VERSION = "20"
+  node_bundler = "nft"
