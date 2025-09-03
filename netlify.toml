@@ -2,120 +2,28 @@
 # Complete configuration for HAP-EB Application
 
 [build]
+  # Build command to run
   command = "npm ci && npm run build"
+  
+  # Directory containing Netlify Functions
   functions = "netlify/functions"
+  
+  # Directory to publish (build output)
   publish = "dist"
-  base = ""
 
-[build.environment]
-  NODE_VERSION = "18"
-  NPM_CONFIG_PRODUCTION = "false"
-  NPM_FLAGS = "--prefix=/opt/buildhome/.nodejs"
-  CI = "true"
-  NODE_ENV = "production"
+# Edge Functions configuration
+[[edge_functions]]
+path = "/master-admin"
+function = "master-admin"
 
-[build.processing]
-  skip_processing = false
+[[edge_functions]]
+path = "/admin"
+function = "admin"
 
-[build.processing.css]
-  bundle = true
-  minify = true
+[[edge_functions]]
+path = "/tl"
+function = "tl"
 
-[build.processing.js]
-  bundle = true
-  minify = true
-
-[build.processing.html]
-  pretty_urls = true
-
-[build.processing.images]
-  compress = true
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "*.js"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "*.css"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
-# SPA fallback
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-[functions]
-  node_bundler = "nft"
-  external_node_modules = ["aws-sdk", "pg-native", "sharp"]
-  directory = "netlify/functions"
-
-[functions."reports_cron"]
-  schedule = "0 9 * * 1"
-
-[dev]
-  command = "npm run dev"
-  port = 3000
-  publish = "dist"
-  autoLaunch = true
-
-[context.production]
-  command = "npm run build"
-
-[context.production.environment]
-  NODE_ENV = "production"
-  REACT_APP_ENV = "production"
-
-[context.deploy-preview]
-  command = "npm run build"
-
-[context.deploy-preview.environment]
-  NODE_ENV = "development"
-  REACT_APP_ENV = "preview"
-
-[context.branch-deploy]
-  command = "npm run build"
-
-[[plugins]]
-  package = "@netlify/plugin-lighthouse"
-  [plugins.inputs.thresholds]
-    performance = 0.9
-    accessibility = 0.9
-    best-practices = 0.9
-    seo = 0.9
-
-# ---------------------------
-# Role-based Access Rules
-# ---------------------------
-[role_access]
-  "/" = ["master_admin", "admin", "tl", "msp"]
-  "/admin" = ["master_admin", "admin"]
-  "/dashboard" = ["master_admin", "admin", "tl"]
-  "/reports" = ["master_admin", "admin", "tl", "msp"]
-
-# ---------------------------
-# Edge Functions
-# ---------------------------
-[edge_functions]
-  "role-redirect" = "role-redirect.js"
+[[edge_functions]]
+path = "/msp"
+function = "msp"
