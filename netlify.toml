@@ -1,5 +1,5 @@
 # Netlify Configuration File
-# Complete configuration for HAP-EB Application
+# HAP-EB Application - React/Vite Setup
 
 [build]
   # Build command to run
@@ -26,19 +26,8 @@
   node_bundler = "nft"
   external_node_modules = ["aws-sdk", "pg"]
 
-# Edge Functions configuration (only if you have these functions created)
-[[edge_functions]]
-  path = "/master-admin"
-  function = "master-admin"
-
-[[edge_functions]]
-  path = "/admin"
-  function = "admin"
-
-[[edge_functions]]
-  path = "/tl"
-  function = "tl"
-
-[[edge_functions]]
-  path = "/msp"
-  function = "msp"
+# Explicitly disable Angular runtime (this is a React app)
+[[plugins]]
+  package = "@netlify/angular-runtime"
+  [plugins.inputs]
+    enabled = false
