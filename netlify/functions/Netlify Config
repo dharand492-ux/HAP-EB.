@@ -1,0 +1,19 @@
+cat > netlify.toml << 'EOF'
+[build]
+  command = "npm ci && npm run build"
+  functions = "netlify/functions"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_FLAGS = "--prefix=/opt/buildhome/.nodejs"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  node_bundler = "nft"
+  external_node_modules = ["aws-sdk", "pg-native"]
+EOF
