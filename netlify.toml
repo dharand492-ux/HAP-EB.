@@ -1,49 +1,173 @@
-cat > netlify.toml << 'EOF'
+# Netlify Configuration File
+# Complete configuration for HAP-EB Application
+
 [build]
+  # Build command to run
   command = "npm ci && npm run build"
+  
+  # Directory containing Netlify Functions
   functions = "netlify/functions"
+  
+  # Directory to publish (build output)
   publish = "dist"
-  base = "."
+  
+  # Base directory for build (leave empty for root)
+  base = ""
 
 [build.environment]
+  # Node.js version
   NODE_VERSION = "18"
+  
+  # NPM configuration
   NPM_CONFIG_PRODUCTION = "false"
+  NPM_FLAGS = "--prefix=/opt/buildhome/.nodejs"
+  
+  # Build environment
   CI = "true"
+  NODE_ENV = "production"
 
+# Build processing settings
 [build.processing]
   skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+[build.processing.images]
+  compress = true
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Redirects for Single Page Application
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  conditions = {Role = ["admin"], Country = ["US"]}
 
+# Fallback redirect for all other routes
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Functions configuration
 [functions]
+  # Node.js bundler for functions
   node_bundler = "nft"
-  external_node_modules = ["aws-sdk"]
+  
+  # External modules to include
+  external_node_modules = [
+    "aws-sdk",
+    "pg-native",
+    "sharp"
+  ]
+  
+  # Function directory
+  directory = "netlify/functions"
 
-# Ensure build context is correct
-[build.ignore]
-  command = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF"
-EOF
-[build]
-  base    = "frontend"
-  publish = "frontend/dist"
+# Specific function configurations
+[functions."reports_cron"]
+  # Schedule for cron function (every Monday at 9 AM)
+  schedule = "0 9 * * 1"
+
+# Development settings
+[dev]
+  command = "npm run dev"
+  port = 3000
+  publish = "dist"
+  autoLaunch = true
+
+# Context-specific settings
+[context.production]
+  command = "npm run build"
+  
+[context.production.environment]
+  NODE_ENV = "production"
+  REACT_APP_ENV = "production"
+
+[context.deploy-preview]
+  command = "npm run build"
+  
+[context.deploy-preview.environment]
+  NODE_ENV = "development"
+  REACT_APP_ENV = "preview"
+
+[context.branch-deploy]
   command = "npm run build"
 
-[functions]
-  directory = "frontend/netlify/functions"
+# Form handling (if needed)
+[forms]
+  # Process forms with Netlify Forms
+  
+# Edge functions (if using)
+[edge_functions]
+  # Configuration for edge functions
 
-[build.environment]
-  NODE_VERSION = "20.10.0"
-  [build]
-  base    = "frontend"
-  publish = "frontend/dist"
-  command = "npm run build"
+# Split testing (A/B testing)
+# [split_testing]
 
-[functions]
-  directory = "frontend/netlify/functions"
+# Large Media (Git LFS)
+# [large_media]
 
-[build.environment]
-  NODE_VERSION = "20.10.0"
+# Analytics
+# [analytics]
 
+# Build plugins
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+  
+  [plugins.inputs.thresholds]
+    performance = 0.9
+    accessibility = 0.9
+    best-practices = 0.9
+    seo = 0.9
+
+# Environment-specific redirects
+[context.production.redirects]
+
+# Build hooks (if needed)
+# [build.ignore]
+#   command = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF"
+
+# Error pages
+# [[error_pages]]
+#   from = "404"
+#   to = "/404.html"
+#   status = 404
