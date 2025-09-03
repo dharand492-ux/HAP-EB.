@@ -21,3 +21,18 @@ export default function App() {
     </div>
   );
 }
+import React from "react";
+import ReportGrid from "./components/ReportGrid";
+
+function App() {
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold text-blue-700 mb-6">
+        ⚡ HAP-EB Report Dashboard
+      </h1>
+      <ReportGrid />
+    </div>
+  );
+}
+
+export default App;
