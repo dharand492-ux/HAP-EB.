@@ -1,19 +1,17 @@
+cat > vite.config.js << 'EOF'
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react' // or vue/svelte plugin
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  root: '.', // Explicitly set root directory
+  root: '.',
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    rollupOptions: {
-      input: {
-        main: './index.html' // Explicit entry point
-      }
-    }
   },
   server: {
-    port: 3000
+    port: 3000,
+    host: true
   }
 })
+EOF
