@@ -1,3 +1,4 @@
+cat > package.json << 'EOF'
 {
   "name": "hap-eb-app",
   "version": "1.0.0",
@@ -8,7 +9,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "node server.js"
+    "start": "node server.js",
+    "install": "npm ci"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -24,17 +26,12 @@
     "@vitejs/plugin-react": "^4.1.1",
     "vite": "^4.5.0"
   },
-  "keywords": [
-    "react",
-    "vite",
-    "netlify",
-    "aws",
-    "reporting"
-  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": ["react", "vite", "netlify", "aws"],
   "author": "HAP-EB Team",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "your-repo-url"
-  }
+  "license": "MIT"
 }
+EOF
