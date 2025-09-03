@@ -1,10 +1,17 @@
+cat > netlify.toml << 'EOF'
 [build]
-  command = "npm run build"
+  command = "npm ci && npm run build"
   functions = "netlify/functions"
   publish = "dist"
+  base = "."
 
 [build.environment]
   NODE_VERSION = "18"
+  NPM_CONFIG_PRODUCTION = "false"
+  CI = "true"
+
+[build.processing]
+  skip_processing = false
 
 [[redirects]]
   from = "/*"
@@ -13,3 +20,9 @@
 
 [functions]
   node_bundler = "nft"
+  external_node_modules = ["aws-sdk"]
+
+# Ensure build context is correct
+[build.ignore]
+  command = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF"
+EOF
