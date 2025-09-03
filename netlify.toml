@@ -27,3 +27,16 @@ function = "tl"
 [[edge_functions]]
 path = "/msp"
 function = "msp"
+[build]
+  # Build command to run
+  command = "npm install && npm run build"
+  
+  # Directory containing Netlify Functions (optional if you have them)
+  functions = "netlify/functions"
+  
+  # Directory to publish (your build output folder)
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+
