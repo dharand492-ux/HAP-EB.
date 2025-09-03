@@ -25,9 +25,3 @@
 [functions]
   node_bundler = "nft"
   external_node_modules = ["aws-sdk", "pg"]
-
-# Explicitly disable Angular runtime (this is a React app)
-[[plugins]]
-  package = "@netlify/angular-runtime"
-  [plugins.inputs]
-    enabled = false
