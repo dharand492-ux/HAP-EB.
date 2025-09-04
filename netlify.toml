@@ -2,8 +2,8 @@
 # HAP-EB Application - React/Vite Setup
 
 [build]
-  # Build command to run
-  command = "npm ci && npm run build"
+  # Build command - using npm install as fallback for npm ci
+  command = "npm install && npm run build"
   
   # Directory containing Netlify Functions
   functions = "netlify/functions"
